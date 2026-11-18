@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>내 기프티콘 · 쿠폰 · 포인트 지갑</title>
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --text: #191f28;
+      --sub: #6b7684;
+      --line: #e5e8eb;
+      --primary: #3182f6;
+      --primary-soft: #e8f3ff;
+      --green: #03c75a;
+      --green-soft: #e6f9ee;
+      --orange: #f97316;
+      --orange-soft: #fff3e6;
+      --red: #ef4444;
+      --red-soft: #fee2e2;
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding-bottom: 90px;
+    }
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 18px 16px 32px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    header h1 {
+      font-size: 22px;
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -0.4px;
+    }
+    .updated {
+      font-size: 12px;
+      color: var(--sub);
+      margin-top: 4px;
+    }
+    .add-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .summary-card {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      color: #fff;
+      border-radius: 22px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+    }
+    .summary-label {
+      font-size: 13px;
+      opacity: 0.8;
+      margin-bottom: 6px;
+    }
+    .summary-total {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      margin-bottom: 12px;
+    }
+    .summary-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .summary-pill {
+      background: rgba(255, 255, 255, 0.14);
+      padding: 7px 11px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    .tab {
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--sub);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .tab.active {
+      background: var(--text);
+      color: #fff;
+      border-color: var(--text);
+    }
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--sub);
+      margin: 18px 4px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 10px;
+      border: 1px solid var(--line);
+    }
+    .item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+    .badge-green { background: var(--green-soft); color: #028a3d; }
+    .badge-blue { background: var(--primary-soft); color: #1b64da; }
+    .badge-orange { background: var(--orange-soft); color: #c2410c; }
+    .badge-red { background: var(--red-soft); color: #b91c1c; }
+    .badge-gray { background: #f2f4f6; color: var(--sub); }
+    .item-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 4px;
+    }
+    .item-desc {
+      font-size: 13px;
+      color: var(--sub);
+      line-height: 1.45;
+      margin: 0;
+    }
+    .amount {
+      font-size: 18px;
+      font-weight: 800;
+      text-align: right;
+      white-space: nowrap;
+    }
+    .card-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid #f2f4f6;
+    }
+    .link-btn, .ghost-btn {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 11px;
+      border-radius: 10px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+    }
+    .link-btn {
+      background: #f2f4f6;
+      color: var(--text);
+    }
+    .ghost-btn {
+      background: transparent;
+      color: var(--sub);
+    }
+    .gift-img {
+      width: 100%;
+      max-height: 220px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #f9fafb;
+      margin-top: 10px;
+      border: 1px solid var(--line);
+    }
+    .used-card {
+      opacity: 0.52;
+    }
+    .empty {
+      text-align: center;
+      padding: 28px 16px;
+      color: var(--sub);
+      font-size: 13px;
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px dashed var(--line);
+    }
+    /* Modal */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      z-index: 100;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: #fff;
+      width: 100%;
+      max-width: 480px;
+      border-radius: 22px 22px 0 0;
+      padding: 20px 18px 28px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .field { margin-bottom: 12px; }
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--sub);
+      margin-bottom: 6px;
+    }
+    .field input, .field select {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      font-size: 14px;
+      font-family: inherit;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .modal-actions button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-cancel { background: #f2f4f6; color: var(--text); }
+    .btn-save { background: var(--primary); color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>혜택 지갑</h1>
+        <div class="updated">2026.11.18 16:58 기준 · 기프티콘·쿠폰·포인트</div>
+      </div>
+      <button class="add-btn" onclick="openModal()">+ 직접 추가</button>
+    </header>
+
+    <section class="summary-card">
+      <div class="summary-label">바로 쓸 수 있는 포인트 · 머니</div>
+      <div class="summary-total" id="totalBalance">3,785원</div>
+      <div class="summary-row">
+        <div class="summary-pill">적립 예정 +1,700원</div>
+        <div class="summary-pill">무신사 쿠폰 999+장</div>
+        <div class="summary-pill" id="giftCountPill">기프티콘 0개</div>
+      </div>
+    </section>
+
+    <div class="tabs">
+      <button class="tab active" data-filter="all" onclick="setFilter('all', this)">전체</button>
+      <button class="tab" data-filter="point" onclick="setFilter('point', this)">포인트 · 적립금</button>
+      <button class="tab" data-filter="coupon" onclick="setFilter('coupon', this)">쿠폰</button>
+      <button class="tab" data-filter="gifticon" onclick="setFilter('gifticon', this)">기프티콘</button>
+    </div>
+
+    <div id="listContainer"></div>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal">
+      <h2>기프티콘 · 쿠폰 추가</h2>
+      <div class="field">
+        <label>종류</label>
+        <select id="fType">
+          <option value="gifticon">기프티콘</option>
+          <option value="coupon">쿠폰</option>
+          <option value="point">포인트 · 적립금</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>브랜드 / 플랫폼</label>
+        <input id="fBrand" placeholder="예: 스타벅스, 올리브영, 카카오선물하기" />
+      </div>
+      <div class="field">
+        <label>상품명 / 혜택명</label>
+        <input id="fTitle" placeholder="예: 아이스 아메리카노 T" />
+      </div>
+      <div class="field">
+        <label>금액 또는 할인</label>
+        <input id="fAmount" placeholder="예: 4,500원 또는 20% 할인" />
+      </div>
+      <div class="field">
+        <label>유효기간</label>
+        <input id="fExpiry" type="date" />
+      </div>
+      <div class="field">
+        <label>메모 / 바코드 번호</label>
+        <input id="fNote" placeholder="예: 1234-5678-9012" />
+      </div>
+      <div class="field">
+        <label>기프티콘 이미지 (선택)</label>
+        <input id="fImage" type="file" accept="image/*" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModal()">취소</button>
+        <button class="btn-save" onclick="saveItem()">저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const DEFAULT_ITEMS = [
+      {
+        id: 'npay-point',
+        type: 'point',
+        brand: '네이버페이',
+        badgeClass: 'badge-green',
+        title: '네이버페이 포인트',
+        amount: '2,003원',
+        numeric: 2003,
+        desc: '프리렌 피규어 한달리뷰(+50원) 적립 반영 완료',
+        url: 'https://pay.naver.com/pc/history',
+        builtin: true,
+        used: false
+      },
+      {
+        id: 'npay-money',
+        type: 'point',
+        brand: '네이버페이',
+        badgeClass: 'badge-green',
+        title: '네이버페이 머니',
+        amount: '374원',
+        numeric: 374,
+        desc: '충전/선물 계좌 머니 잔액',
+        url: 'https://pay.naver.com/pc/history',
+        builtin: true,
+        used: false
+      },
+      {
+        id: 'musinsa-point',
+        type: 'point',
+        brand: '무신사',
+        badgeClass: 'badge-blue',
+        title: '무신사 적립금',
+        amount: '1,408원',
+        numeric: 1408,
+        desc: '일반 후기 4건 등록 완료 (검수 후 +1,700원 추가 적립 예정 · 아웃스탠딩 500 / 트릴리온 200 / 1989스탠다드 500 / 페플 500)',
+        url: 'https://www.musinsa.com/mypage',
+        builtin: true,
+        used: false
+      },
+      {
+        id: 'musinsa-coupon',
+        type: 'coupon',
+        brand: '무신사',
+        badgeClass: 'badge-blue',
+        title: '보유 쿠폰 999+장',
+        amount: '999+장',
+        numeric: 0,
+        desc: 'LV.4 브론즈 회원 등급 혜택(1% 할인 · 무료배송) 포함 사용 가능한 쿠폰',
+        url: 'https://www.musinsa.com/mypage',
+        builtin: true,
+        used: false
+      }
+    ];
+
+    const STORAGE_KEY = 'junwon_benefit_wallet_v1';
+    let currentFilter = 'all';
+
+    function loadCustom() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      } catch {
+        return [];
+      }
+    }
+
+    function saveCustom(items) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function getDdayBadge(expiry) {
+      if (!expiry) return null;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const target = new Date(expiry + 'T00:00:00');
+      const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+      if (diff < 0) return { text: '만료됨', cls: 'badge-red' };
+      if (diff === 0) return { text: 'D-DAY', cls: 'badge-red' };
+      if (diff <= 7) return { text: `D-${diff}`, cls: 'badge-orange' };
+      return { text: `D-${diff}`, cls: 'badge-gray' };
+    }
+
+    function setFilter(filter, btn) {
+      currentFilter = filter;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      render();
+    }
+
+    function toggleUsed(id) {
+      const custom = loadCustom();
+      const idx = custom.findIndex(x => x.id === id);
+      if (idx >= 0) {
+        custom[idx].used = !custom[idx].used;
+        saveCustom(custom);
+        render();
+      }
+    }
+
+    function deleteItem(id) {
+      const custom = loadCustom().filter(x => x.id !== id);
+      saveCustom(custom);
+      render();
+    }
+
+    function render() {
+      const custom = loadCustom();
+      const all = [...custom, ...DEFAULT_ITEMS];
+      const giftCount = custom.filter(x => x.type === 'gifticon' && !x.used).length;
+      document.getElementById('giftCountPill').textContent = `기프티콘 ${giftCount}개`;
+
+      const filtered = all.filter(item => currentFilter === 'all' || item.type === currentFilter);
+      const container = document.getElementById('listContainer');
+
+      if (filtered.length === 0) {
+        const msg = currentFilter === 'gifticon'
+          ? '아직 등록된 기프티콘이 없어요.<br>네이버 선물함·Gmail에도 미사용 기프티콘이 없어, 카톡 선물함 이미지가 있으면 <b>+ 직접 추가</b>로 넣어둘 수 있어요!'
+          : '표시할 항목이 없어요.';
+        container.innerHTML = `<div class="empty">${msg}</div>`;
+        return;
+      }
+
+      const groups = [
+        { key: 'gifticon', label: '기프티콘' },
+        { key: 'point', label: '포인트 · 적립금' },
+        { key: 'coupon', label: '쿠폰' }
+      ];
+
+      let html = '';
+      for (const g of groups) {
+        const rows = filtered.filter(x => x.type === g.key);
+        if (rows.length === 0 && currentFilter !== g.key) continue;
+
+        html += `<div class="section-title"><span>${g.label}</span><span>${rows.length}건</span></div>`;
+        if (rows.length === 0) {
+          html += `<div class="empty">아직 등록된 기프티콘이 없어요.<br>네이버 선물함·Gmail에도 미사용 기프티콘이 없어, 카톡 선물함 이미지가 있으면 <b>+ 직접 추가</b>로 넣어둘 수 있어요!</div>`;
+          continue;
+        }
+
+        for (const item of rows) {
+          const dday = getDdayBadge(item.expiry);
+          const ddayHtml = dday ? `<span class="badge ${dday.cls}">${dday.text}</span>` : '';
+          const usedHtml = item.used ? `<span class="badge badge-gray">사용 완료</span>` : '';
+          const imgHtml = item.image ? `<img class="gift-img" src="${item.image}" alt="${item.title}" />` : '';
+
+          html += `
+            <div class="card ${item.used ? 'used-card' : ''}">
+              <div class="item-top">
+                <div>
+                  <div class="brand-row">
+                    <span class="badge ${item.badgeClass || 'badge-gray'}">${item.brand}</span>
+                    ${ddayHtml}
+                    ${usedHtml}
+                  </div>
+                  <h3 class="item-title">${item.title}</h3>
+                  <p class="item-desc">${item.desc || ''}${item.expiry ? (item.desc ? ' · ' : '') + '유효기간 ' + item.expiry : ''}</p>
+                </div>
+                <div class="amount">${item.amount || ''}</div>
+              </div>
+              ${imgHtml}
+              <div class="card-actions">
+                ${item.url ? `<a class="link-btn" href="${item.url}" target="_blank" rel="noopener">바로 열기</a>` : ''}
+                ${!item.builtin ? `<button class="link-btn" onclick="toggleUsed('${item.id}')">${item.used ? '미사용으로' : '사용 완료'}</button>` : ''}
+                ${!item.builtin ? `<button class="ghost-btn" onclick="deleteItem('${item.id}')">삭제</button>` : ''}
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      container.innerHTML = html;
+    }
+
+    function openModal() {
+      document.getElementById('modalBackdrop').classList.add('open');
+    }
+    function closeModal() {
+      document.getElementById('modalBackdrop').classList.remove('open');
+    }
+
+    function saveItem() {
+      const type = document.getElementById('fType').value;
+      const brand = document.getElementById('fBrand').value.trim() || '기타';
+      const title = document.getElementById('fTitle').value.trim();
+      const amount = document.getElementById('fAmount').value.trim();
+      const expiry = document.getElementById('fExpiry').value;
+      const desc = document.getElementById('fNote').value.trim();
+      const fileInput = document.getElementById('fImage');
+
+      if (!title) {
+        alert('상품명 또는 혜택명을 입력해 주세요.');
+        return;
+      }
+
+      const finishSave = (imageData) => {
+        const custom = loadCustom();
+        custom.unshift({
+          id: 'custom-' + Date.now(),
+          type,
+          brand,
+          badgeClass: type === 'gifticon' ? 'badge-orange' : 'badge-blue',
+          title,
+          amount,
+          expiry,
+          desc,
+          image: imageData || '',
+          builtin: false,
+          used: false
+        });
+        saveCustom(custom);
+        document.getElementById('fBrand').value = '';
+        document.getElementById('fTitle').value = '';
+        document.getElementById('fAmount').value = '';
+        document.getElementById('fExpiry').value = '';
+        document.getElementById('fNote').value = '';
+        fileInput.value = '';
+        closeModal();
+        render();
+      };
+
+      const file = fileInput.files && fileInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => finishSave(reader.result);
+        reader.readAsDataURL(file);
+      } else {
+        finishSave('');
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>
